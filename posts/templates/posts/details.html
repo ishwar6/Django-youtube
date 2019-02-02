@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+    crossorigin="anonymous" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10 border border-secondary mt-3">
+            <h1 class="mt-3  text-center">{{post.title}}<small class="text-muted"> by {{post.author}} </small></h1>
+            <mark> Published on {{post.published_at}}</mark>
+            <p class="lead mt-2"> {{post.text}} </p>
+        </div>
+        <div class="col-sm-2">
+            <div class="list-group">
+                {% for s in subjects %}
+                <a href="/subject/{{s.id}}" class="list-group-item list-group-item-action m-1 ">{{s}}</a>
+                {% endfor %}
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

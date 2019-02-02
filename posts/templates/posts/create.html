@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+    crossorigin="anonymous" />
+
+
+
+
+
+
+<div class="container m-2 p-2 ">
+    <div class="row">
+
+        <div class="col-sm-3">
+            SIDEBAR
+        </div>
+        <div class="col-sm-6">
+            <h1 class="display-4 p-1 m-3">Create a New Post</h1>
+            <form action="" method='post'>
+
+                {% csrf_token %}
+
+                {{form.as_p}}
+
+
+
+                <input type="submit">
+            </form>
+        </div>
+
+        <div class="col-sm-3">
+
+        </div>
+
+    </div>
+
+</div>
