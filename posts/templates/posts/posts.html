@@ -13,9 +13,13 @@
                 <h5 class="card-title">{{ a.title }}</h5>
                 <p class="card-text">{{ a.text|truncatechars:100 }}</p>
                 <a href="/posts/{{ a.slug }}" class="btn btn-primary">View</a>
+                <a href="/posts/update/{{ a.id }}" class="btn btn-secondary">Update</a>
+                OR <a href=" {% url 'post-update' a.id %} " class="btn btn-secondary">Update</a>
             </div>
+
             <div class="card-footer">
-                <small class="text-muted">Last updated {{ a.published_at | timesince }} mins ago</small>
+                <small class="text-muted">Last updated {{ a.updated | timesince }} mins ago</small>
+                <small class="text-muted">Created: {{ a.published_at | timesince }} mins ago</small>
             </div>
         </div>
 

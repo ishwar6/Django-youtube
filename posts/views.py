@@ -92,3 +92,35 @@ def subject_sidebar(request, id):
         'posts': posts
     }
     return render(request, 'posts/posts.html', context)
+
+
+def post_update(request, id):
+    if request.method == 'GET':
+        post = get_object_or_404(Post, id=id)
+        form = PostCreate(instance=post)
+        context = {
+            'form': form
+        }
+
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=id)
+        form = PostCreate(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            blog_type = form.cleaned_data.get('blog_type')
+            text = form.cleaned_data.get('text')
+            status = form.cleaned_data.get('status')
+
+            post.title = title
+            post.blog_type = blog_type
+            post.text = text
+            post.status = status
+            post.save()
+            return redirect('post-show')
+        else:
+            form = PostCreate(instance=post)
+            context = {
+                'form': form
+            }
+
+    return render(request, 'posts/create.html', context)
