@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path
 
-from posts.views import show_post, homepage, detail, post_create, subject_sidebar
+from posts.views import show_post, homepage, detail, post_create, subject_sidebar, login_
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('posts/<slug:post_id>', detail),
     path('subject/<int:id>', subject_sidebar),
+      path('login', login_, name='login'),
 ]
 
 
