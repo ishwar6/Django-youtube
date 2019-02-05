@@ -116,3 +116,25 @@ def post_update_new(request, post_id):
             return redirect('post-show')
 
     return render(request, 'posts/update.html', {'form': form})
+
+
+
+
+def login_(request):
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            print('here')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            if username and password:
+                print('here 2')
+                user_obj = authenticate(
+                    request, username=username, password=password)
+                print(user_obj)
+                if user_obj is not None:
+                    login(request, user_obj)
+                    return redirect('post-show')
+    return render(request, 'posts/update.html', {'form': form})
+
