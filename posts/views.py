@@ -6,6 +6,10 @@ import datetime
 from .models import Post, Subject
 from django.urls import reverse
 from .forms import PostCreate
+from django.views.generic import CreateView
+from django.urls import reverse
+
+from django.views.generic import DetailView, ListView, UpdateView
 
 
 def show_post(request):
