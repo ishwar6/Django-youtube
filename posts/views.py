@@ -138,3 +138,55 @@ def login_(request):
                     return redirect('post-show')
     return render(request, 'posts/update.html', {'form': form})
 
+
+
+# class Based Views
+
+class PostList(ListView):
+    model = Post
+    template_name = 'posts/posts.html'
+    context_object_name = 'posts'
+
+    def queryset(self, *args, **kwargs):
+        return Post.objects.all()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return context
+
+
+class PostDetail(DetailView):
+    model = Post
+    context_object_name = 'post'
+    template_name = 'posts/details.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['subjects'] = Subject.objects.all()
+        return context
+
+
+class PostCreateNew(CreateView):
+    model = Post
+    form_class = PostCreate
+    template_name = 'posts/create.html'
+
+    def get_success_url(self):
+        return reverse('post-show')
+
+
+class PostUpdate(UpdateView):
+    model = Post
+
+    template_name = 'posts/create.html'
+    fields = ('status', 'title', 'text', 'blog_type')
+
+    def get_success_url(self):
+        return reverse('post-show')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        print(context)
+        return context
+
+
