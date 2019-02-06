@@ -30,11 +30,11 @@ urlpatterns = [
     # class based views
 
 
-    # path('class/posts', PostList.as_view(), name='all-posts'),
-    # path('class/posts/<slug:slug>', PostDetail.as_view(), name='c-post'),
+    path('class/posts', PostList.as_view(), name='all-posts'),
+    path('class/posts/<slug:slug>', PostDetail.as_view(), name='c-post'),
 
-    # path('class/post/create', PostCreate.as_view(), name='c-post'),
-    # path('class/post/update/<int:pk>', PostUpdate.as_view(), name='c-update'),
+    path('class/post/create', PostCreate.as_view(), name='c-post'),
+    path('class/post/update/<int:pk>', PostUpdate.as_view(), name='c-update'),
 
 
 
