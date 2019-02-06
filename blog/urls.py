@@ -1,8 +1,17 @@
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-from posts.views import show_post, homepage, detail, post_create, subject_sidebar, login_
+from posts.views import show_post, homepage, detail, post_create, subject_sidebar,  login_, post_update_new
+
+from posts.views import PostList, PostDetail, PostCreateNew, PostUpdate
+
+
+from django.conf import settings
+
+
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -10,10 +19,32 @@ urlpatterns = [
     path('posts/create', post_create, name='post-create'),
     path('', homepage),
 
-    path('posts/<slug:post_id>', detail),
+    path('posts/<slug:post_id>', detail, name='post-detail'),
     path('subject/<int:id>', subject_sidebar),
-      path('login', login_, name='login'),
+    path('post/update/<int:post_id>', post_update_new, name='post-update'),
+    path('login', login_, name='login'),
+
+    path('blogs/', include('posts.urls', namespace='blog')),
+
+
+    # class based views
+
+
+    # path('class/posts', PostList.as_view(), name='all-posts'),
+    # path('class/posts/<slug:slug>', PostDetail.as_view(), name='c-post'),
+
+    # path('class/post/create', PostCreate.as_view(), name='c-post'),
+    # path('class/post/update/<int:pk>', PostUpdate.as_view(), name='c-update'),
+
+
+
 ]
 
 
 #  path('posts/<slug:slug>', detail),
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + \
+        static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns = urlpatterns + \
+        static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
