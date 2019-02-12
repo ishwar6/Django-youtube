@@ -3,7 +3,7 @@ from .views import ProductList
 from django.urls import path
 
 
-app_name = 'posts'
+app_name = 'product'
 
 urlpatterns = [
 
