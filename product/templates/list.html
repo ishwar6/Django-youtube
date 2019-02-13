@@ -1,0 +1,39 @@
+{% extends "posts/base.html" %}
+
+
+{% block content %}
+
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="card-columns">
+            {% for p in products %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{p.image.url}}" class="card-img-top" alt="{{p.image}}" height="250px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{p.title}}</h5>
+                    <p class="card-text"> {{p.description|truncatechars:100}} </p>
+                    <p class="card-text"> <b>Price</b> : {{p.price}} </p>
+                    {% if p.featured %}
+                    <p class="card-text"> <i> Special & Featured </i> </p>
+                    {% endif %}
+
+                    <a href="#" class="btn btn-primary">Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}

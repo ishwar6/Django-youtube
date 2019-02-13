@@ -25,20 +25,31 @@ urlpatterns = [
     path('login', login_, name='login'),
 
     path('blogs/', include('posts.urls', namespace='blog')),
+<<<<<<< HEAD
     path('products/', include('product.urls', namespace='product')),
 
     path('cart/', include('cart.urls', namespace='cart')),
     path('account/', include('accounts.urls', namespace='accounts')),
+=======
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 
 
     # class based views
 
 
+<<<<<<< HEAD
     # path('class/posts', PostList.as_view(), name='all-posts'),
     # path('class/posts/<slug:slug>', PostDetail.as_view(), name='c-post'),
 
     # path('class/post/create', PostCreate.as_view(), name='c-post'),
     # path('class/post/update/<int:pk>', PostUpdate.as_view(), name='c-update'),
+=======
+    path('class/posts', PostList.as_view(), name='all-posts'),
+    path('class/posts/<slug:slug>', PostDetail.as_view(), name='c-post'),
+
+    path('class/post/create', PostCreate.as_view(), name='c-post'),
+    path('class/post/update/<int:pk>', PostUpdate.as_view(), name='c-update'),
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 
 
 

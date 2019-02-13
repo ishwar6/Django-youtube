@@ -5,12 +5,17 @@ from django.db.models import Q
 import datetime
 from .models import Post, Subject
 from django.urls import reverse
+<<<<<<< HEAD
 from .forms import PostCreate, LoginForm
 from django.contrib.auth import authenticate, login
+=======
+from .forms import PostCreate
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 from django.views.generic import CreateView
 from django.urls import reverse
 
 from django.views.generic import DetailView, ListView, UpdateView
+<<<<<<< HEAD
 
 
 class PostListAll(ListView):
@@ -34,6 +39,8 @@ def post_list(request):
         'date': datetime.datetime.now()
     }
     return render(request, 'posts/all.html', context)
+=======
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 
 
 def show_post(request):
@@ -124,7 +131,10 @@ def post_update_new(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     print(post)
     form = PostCreate(instance=post)
+<<<<<<< HEAD
     print(form)
+=======
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 
     if request.method == 'POST':
         post = get_object_or_404(Post, id=post_id)
@@ -145,6 +155,11 @@ def post_update_new(request, post_id):
     return render(request, 'posts/update.html', {'form': form})
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 def login_(request):
     form = LoginForm()
     if request.method == 'POST':
@@ -164,6 +179,12 @@ def login_(request):
     return render(request, 'posts/update.html', {'form': form})
 
 
+<<<<<<< HEAD
+=======
+
+# class Based Views
+
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 class PostList(ListView):
     model = Post
     template_name = 'posts/posts.html'
@@ -211,5 +232,9 @@ class PostUpdate(UpdateView):
         print(context)
         return context
 
+<<<<<<< HEAD
     # def get_object(self):
     #     return Post.objects.get(id=self.kwargs['pk'])
+=======
+
+>>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
