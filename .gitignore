@@ -92,4 +92,4 @@ env/
 /env
 *.java
 *.class
-migrations/
+git admigrations/

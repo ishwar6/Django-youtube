@@ -5,15 +5,41 @@ from django.db.models import Q
 import datetime
 from .models import Post, Subject
 from django.urls import reverse
-from .forms import PostCreate
+from .forms import PostCreate, LoginForm
+from django.contrib.auth import authenticate, login
+from django.views.generic import CreateView
+from django.urls import reverse
+
+from django.views.generic import DetailView, ListView, UpdateView
+
+
+class PostListAll(ListView):
+    model = Post
+    template_name = 'posts/all.html'
+    context_object_name = 'posts'
+
+    def queryset(self):
+        return Post.objects.all()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['date'] = datetime.datetime.now()
+        return context
+
+
+def post_list(request):
+    all_posts = Post.objects.all()
+    context = {
+        'posts': all_posts,
+        'date': datetime.datetime.now()
+    }
+    return render(request, 'posts/all.html', context)
 
 
 def show_post(request):
-    print('haha')
 
     q = Post.objects.all()
-    print(q)
-    print(request.method)
+
     context = {
         'time': datetime.datetime.now(),
         'posts': q
@@ -94,16 +120,14 @@ def subject_sidebar(request, id):
     return render(request, 'posts/posts.html', context)
 
 
-def post_update(request, id):
-    if request.method == 'GET':
-        post = get_object_or_404(Post, id=id)
-        form = PostCreate(instance=post)
-        context = {
-            'form': form
-        }
+def post_update_new(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    print(post)
+    form = PostCreate(instance=post)
+    print(form)
 
     if request.method == 'POST':
-        post = get_object_or_404(Post, id=id)
+        post = get_object_or_404(Post, id=post_id)
         form = PostCreate(request.POST)
         if form.is_valid():
             title = form.cleaned_data.get('title')
@@ -117,10 +141,75 @@ def post_update(request, id):
             post.status = status
             post.save()
             return redirect('post-show')
-        else:
-            form = PostCreate(instance=post)
-            context = {
-                'form': form
-            }
 
-    return render(request, 'posts/create.html', context)
+    return render(request, 'posts/update.html', {'form': form})
+
+
+def login_(request):
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            print('here')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            if username and password:
+                print('here 2')
+                user_obj = authenticate(
+                    request, username=username, password=password)
+                print(user_obj)
+                if user_obj is not None:
+                    login(request, user_obj)
+                    return redirect('post-show')
+    return render(request, 'posts/update.html', {'form': form})
+
+
+class PostList(ListView):
+    model = Post
+    template_name = 'posts/posts.html'
+    context_object_name = 'posts'
+
+    def queryset(self, *args, **kwargs):
+        return Post.objects.all()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return context
+
+
+class PostDetail(DetailView):
+    model = Post
+    context_object_name = 'post'
+    template_name = 'posts/details.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['subjects'] = Subject.objects.all()
+        return context
+
+
+class PostCreateNew(CreateView):
+    model = Post
+    form_class = PostCreate
+    template_name = 'posts/create.html'
+
+    def get_success_url(self):
+        return reverse('post-show')
+
+
+class PostUpdate(UpdateView):
+    model = Post
+
+    template_name = 'posts/create.html'
+    fields = ('status', 'title', 'text', 'blog_type')
+
+    def get_success_url(self):
+        return reverse('post-show')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        print(context)
+        return context
+
+    # def get_object(self):
+    #     return Post.objects.get(id=self.kwargs['pk'])

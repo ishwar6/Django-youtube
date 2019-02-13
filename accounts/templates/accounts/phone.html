@@ -1,0 +1,49 @@
+<form action="" method='post'>
+    {% csrf_token %}
+
+    <p><label for="id_phone">Phone:</label> <input type="number" name="phone" required id="id_phone"></p>
+
+    <span id='msg'></span>
+    <br>
+
+
+    <p><label for="id_otp">Otp:</label> <input type="number" name="otp" required id="id_otp"></p>
+
+
+    <button type="submit">Submit</button>
+
+</form>
+{% block javascript %}
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+<script>
+    $('#id_phone').change(function () {
+        console.log($(this).val());
+
+
+        var phone = $(this).val();
+        if (phone.length === 10) {
+            document.getElementById("msg").innerHTML =
+                `<p style="color: green;">OTP Sent! Please Enter OTP below </p>`;
+
+            $.ajax({
+                url: 'account/register/ajax/',
+                data: {
+                    'phone': phone
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.is_taken) {
+                        alert("A user with this phone already exists.");
+                    }
+                }
+            });
+        } else {
+
+            document.getElementById("msg").innerHTML = `<p style="color: red;"> Enter Correct Phone Number</p>`;
+        }
+    });
+</script>
+{% endblock %}

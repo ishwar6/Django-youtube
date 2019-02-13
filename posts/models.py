@@ -1,8 +1,11 @@
+import os
+import random
 from django.db import models
 
 from django.db.models.signals import pre_save, post_save
 # from authors.models import Author
 from blog.utils import unique_slug_generator
+from django.urls import reverse
 
 
 class Subject(models.Model):
@@ -19,12 +22,31 @@ STATUS_CHOICES = (
 )
 
 
+def upload_image_path_posts(instance, filename):
+    new_filename = random.randint(1, 9910209312)
+    name, ext = get_filename_ext(filename)
+    final_filename = '{new_filename}{ext}'.format(
+        new_filename=new_filename, ext=ext)
+    return "posts/{new_filename}/{final_filename}".format(
+        new_filename=new_filename,
+        final_filename=final_filename
+    )
+
+
+def get_filename_ext(filepath):
+    base_name = os.path.basename(filepath)
+    name, ext = os.path.splitext(base_name)
+    return name, ext
+
+
 class Post(models.Model):
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, null=True, blank=True)
    # author = models.OneToOneField(
     # Author, on_delete = models.CASCADE, blank = True, null = True)
     blog_type = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    image = models.ImageField(
+        upload_to=upload_image_path_posts, null=True, blank=True)
     text = models.TextField()
     published_at = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

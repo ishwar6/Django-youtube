@@ -1,5 +1,8 @@
-{% extends "posts/base.html" %}
+{% extends 'posts/base.html' %}
+
 {% block content %}
+
+
 
 <div class="container-fluid">
     <h1 class="text-center">All Blog Posts</h1>
@@ -13,8 +16,12 @@
                 <h5 class="card-title">{{ a.title }}</h5>
                 <p class="card-text">{{ a.text|truncatechars:100 }}</p>
                 <a href="/posts/{{ a.slug }}" class="btn btn-primary">View</a>
-                <a href="/posts/update/{{ a.id }}" class="btn btn-secondary">Update</a>
-                OR <a href=" {% url 'post-update' a.id %} " class="btn btn-secondary">Update</a>
+
+
+                <a href="{% url 'post-update' a.id  %}" class="btn btn-secondary">Edit</a>
+
+
+
             </div>
 
             <div class="card-footer">
