@@ -4,108 +4,62 @@ from .forms import OTPForm
 import random
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
+import requests
 
 
-@csrf_exempt
-def validate_phone(request):
-    phone = request.GET.get('phone', None)
-    data = {
-        'is_taken': False
-    }
-    data['phone'] = phone,
-    print('working')
+def send_otp_phone(phone, key):
+    otp_key = key
+    name = phone
 
-    if data['is_taken']:
-        data['error_message'] = 'This Phone Number already exists.',
-    else:
-        request.session['phone'] = phone
-        send_activation(request, phone)
+    link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=YOUR_API_KEY&to={phone}&from=YOUR_TEMPLATE&templatename=YOUR_TEMPLATE_NAME&var1={name}&var2={otp_key}'
 
-    return redirect('accounts:check-otp')
+    result = requests.get(link, verify=False)
 
 
-@csrf_exempt
-def register_new(request):
-    # if request.user.is_authenticated:
-    #     return redirect('account:profile')
-    form = OTPForm()
-    return render(request, 'accounts/phone.html', {'form': form})
-
-
-@csrf_exempt
-def send_activation(request, phone):
-    phone = request.session.get('phone', '6666')
-    key = random.randint(1, 999999)
-    previous = PhoneOTP.objects.filter(phone=phone)
-    if previous.exists():
-        previous.first().delete()
-
-    PhoneOTP.objects.create(
-        phone=phone,
-        otp=key
-    )
-    print('step 1')
-    request.session['key'] = key
-
-    phone = str(phone)
-    key = str(key)
-    # link = 'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=26183928-e9fe-11e7-a328-0200cd936042&to=' + \
-    #     phone+'&from=HTadka&templatename=Firstlogin&var1='+key
+def send_otp_this(request):
+    phone = request.GET.get('phone')
+    print(phone)
+    key = random.randint(999, 9999)
     print(key)
-    # result = requests.get(link)
-    # end = len(result.text)
-    # return result.ok
-    return True
 
+    phone_obj = PhoneOTP.objects.filter(phone=phone)
+    if phone_obj.exists():
+        phone_obj = phone_obj.first()
+        count = phone_obj.count
+        if count < 6:
+            phone_obj.count = count + 1
+            phone_obj.otp = key
+            phone_obj.save()
+            send_otp_phone(phone, key)
+            return JsonResponse({'send': True})
 
-@csrf_exempt
-def send_otp(request):
-
-    if request.method == 'POST':
-        token = 0
-        phone = request.session.get('phone', '6666')
-        otp_given_ = PhoneOTP.objects.filter(phone=phone)
-        print(otp_given_)
-        if otp_given_.exists():
-            otp_given = otp_given_.first()
-            token = otp_given.match
-        print(token)
-        form = PhoneOTP(request.POST or None)
-        if form.is_valid():
-            if token == 1:
-                print('here token is 0ne')
-                return redirect('account:set-password')
         else:
-            if token:
-                del request.session['token']
-            return redirect('account:register')
+            return JsonResponse({'send': False})
     else:
-        form = PhoneOTP()
-    return render(request, 'accounts/phone.html', {'form': form})
+
+        PhoneOTP.objects.create(
+            phone=phone,
+            otp=key,
+            count=1
+        )
+        send_otp_phone(phone, key)
+        return JsonResponse({'send': True})
 
 
-@csrf_exempt
-def validate_otp(request):
-    phone = request.session.get('phone', '6666')
-    otp = int(request.GET.get('otp', None))
-    otp_given_ = PhoneOTP.objects.filter(phone=phone)
-    if otp_given_.exists():
-        otp_given = otp_given_.first().otp
-
-    data = {
-        'matches': False
-    }
-    if otp == otp_given:
-        otp_given_ = PhoneOTP.objects.filter(phone=phone)
-        if otp_given_.exists():
-            otp_given = otp_given_.first()
-            otp_given.match = 1
-            otp_given.save()
-            print('saved 2', otp_given)
-        data = {
-            'matches': True
-        }
-    if not data['matches']:
-        data['error_message'] = 'This otp is not valid.',
-    print(data)
-    return JsonResponse(data)
+def otp_match(request):
+    phone = request.GET.get('phone')
+    otp_user = request.GET.get('otp')
+    print(phone, otp_user)
+    if phone and otp_user:
+        phone_obj = PhoneOTP.objects.filter(phone=phone)
+        if phone_obj.exists():
+            phone_obj = phone_obj.first()
+            otp_actual = phone_obj.otp
+            if int(otp_actual) == int(otp_user):
+                return JsonResponse({'match': True})
+            else:
+                return JsonResponse({'match': False})
+        else:
+            return JsonResponse({'match': False, 'msg': True})
+    else:
+        return JsonResponse({'match': False, 'msg': True})

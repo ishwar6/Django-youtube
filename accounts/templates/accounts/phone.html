@@ -1,4 +1,4 @@
-<form action="" method='post'>
+<form action="" method='post' send-url="{% url 'accounts:check-otp' %}">
     {% csrf_token %}
 
     <p><label for="id_phone">Phone:</label> <input type="number" name="phone" required id="id_phone"></p>
@@ -8,7 +8,7 @@
 
 
     <p><label for="id_otp">Otp:</label> <input type="number" name="otp" required id="id_otp"></p>
-
+    <span id='msg2'></span>
 
     <button type="submit">Submit</button>
 
@@ -21,22 +21,30 @@
 <script>
     $('#id_phone').change(function () {
         console.log($(this).val());
+        var form = $(this).closest("form");
+        console.log(form);
 
 
         var phone = $(this).val();
+
         if (phone.length === 10) {
             document.getElementById("msg").innerHTML =
                 `<p style="color: green;">OTP Sent! Please Enter OTP below </p>`;
 
             $.ajax({
-                url: 'account/register/ajax/',
+                url: '/account/ajax/new/',
                 data: {
                     'phone': phone
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (data.is_taken) {
-                        alert("A user with this phone already exists.");
+                    console.log(data)
+                    if (data.send) {
+                        document.getElementById("msg").innerHTML =
+                            `<p style="color: green;">OTP sent! Type it below</p>`;
+                    } else {
+                        document.getElementById("msg").innerHTML =
+                            `<p style="color: red;">OTP limit exceeded!! Contact Support</p>`;
                     }
                 }
             });
@@ -44,6 +52,41 @@
 
             document.getElementById("msg").innerHTML = `<p style="color: red;"> Enter Correct Phone Number</p>`;
         }
+    });
+
+
+
+    $('#id_otp').change(function () {
+        console.log($(this).val());
+        var form = $(this).closest("form");
+        console.log(form);
+
+
+        var otp = $(this).val();
+        var phone = $('#id_phone').val();
+        console.log(otp);
+        console.log(phone);
+
+
+
+        $.ajax({
+            url: '/account/ajax/match',
+            data: {
+                'phone': phone,
+                'otp': otp
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                if (data.match) {
+                    document.getElementById("msg2").innerHTML =
+                        `<p style="color: green;">OTP Match</p>`;
+                } else {
+                    document.getElementById("msg2").innerHTML =
+                        `<p style="color: red;">OTP Incorrect</p>`;
+                }
+            }
+        });
     });
 </script>
 {% endblock %}

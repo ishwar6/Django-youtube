@@ -125,12 +125,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-<<<<<<< HEAD
-=======
-STATIC_URL = '/static/'
-
-
->>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static_my_proj"),
 ]
@@ -144,8 +138,5 @@ MEDIA_ROOT = os.path.join(os.path.dirname(
 
 # LOGIN_REDIRECT_URL = 'students:login'
 # LOGIN_URL = 'chapters:list'
-# LOGOUT_REDIRECT_URL = 'students:unlogged'
-<<<<<<< HEAD
-=======
 
->>>>>>> 542bfc8a32b0feee925334932b25bfc4701f3498
+# LOGOUT_REDIRECT_URL = 'students:unlogged'
