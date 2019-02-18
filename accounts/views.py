@@ -5,6 +5,13 @@ import random
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 import requests
+from django.contrib.auth import get_user_model, login
+User = get_user_model()
+
+
+def register(request):
+    form = OTPForm()
+    return render(request, 'accounts/phone.html', {'form': form})
 
 
 def send_otp_phone(phone, key):
@@ -13,12 +20,16 @@ def send_otp_phone(phone, key):
 
     link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=YOUR_API_KEY&to={phone}&from=YOUR_TEMPLATE&templatename=YOUR_TEMPLATE_NAME&var1={name}&var2={otp_key}'
 
-    result = requests.get(link, verify=False)
+    #result = requests.get(link, verify=False)
 
 
 def send_otp_this(request):
     phone = request.GET.get('phone')
     print(phone)
+    phone_obj = User.objects.filter(username=phone)
+    if phone_obj.exists():
+        return JsonResponse({'send': False, 'taken': True})
+
     key = random.randint(999, 9999)
     print(key)
 
@@ -63,3 +74,17 @@ def otp_match(request):
             return JsonResponse({'match': False, 'msg': True})
     else:
         return JsonResponse({'match': False, 'msg': True})
+
+
+def create(request):
+    phone = request.GET.get('phone')
+    password = request.GET.get('pass')
+    if phone and password:
+        user = User.objects.create_user(
+            username=phone,
+            password=password
+        )
+        login(request, user)
+        return JsonResponse({'create': True})
+    else:
+        return JsonResponse({'create': False})
