@@ -1,25 +1,52 @@
-<form action="" method='post' send-url="{% url 'accounts:check-otp' %}">
-    {% csrf_token %}
+{% extends 'posts/base.html' %}
 
-    <p><label for="id_phone">Phone:</label> <input type="number" name="phone" required id="id_phone"></p>
+{% block content %}
 
-    <span id='msg'></span>
-    <br>
+<div class="container">
+    <div class="row">
 
 
-    <p><label for="id_otp">Otp:</label> <input type="number" name="otp" required id="id_otp"></p>
-    <span id='msg2'></span>
+        <form action="" method='post'>
 
-    <button type="submit">Submit</button>
+            <div class="form-group">
+                {% csrf_token %}
 
-</form>
+                <p><label for="id_phone">Phone:</label> <input class="form-control" type="number" name="phone" required
+                        id="id_phone"></p>
+
+                <span id='msg'></span>
+                <br>
+
+                <div id="otp">
+                    <p><label for="id_otp">Otp:</label> <input type="number" name="otp" required id="id_otp"></p>
+                </div>
+                <br>
+                <div id="pass">
+                    <p><label for="id_otp">Password:</label> <input type="password" name="password" required id="id_password"></p>
+                </div>
+                <span id='msg2'></span>
+
+
+
+        </form>
+
+        <button>Go</button>
+
+    </div>
+</div>
+
+
 {% block javascript %}
 
 <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 
 <script>
+    $('#otp').hide();
+    $('#pass').hide();
     $('#id_phone').change(function () {
+        $('#otp').hide();
+        $('#pass').hide();
         console.log($(this).val());
         var form = $(this).closest("form");
         console.log(form);
@@ -28,8 +55,9 @@
         var phone = $(this).val();
 
         if (phone.length === 10) {
+
             document.getElementById("msg").innerHTML =
-                `<p style="color: green;">OTP Sent! Please Enter OTP below </p>`;
+                `<p style="color: green;">Please Wait......</p>`;
 
             $.ajax({
                 url: '/account/ajax/new/',
@@ -42,21 +70,30 @@
                     if (data.send) {
                         document.getElementById("msg").innerHTML =
                             `<p style="color: green;">OTP sent! Type it below</p>`;
+                        $('#otp').show();
                     } else {
-                        document.getElementById("msg").innerHTML =
-                            `<p style="color: red;">OTP limit exceeded!! Contact Support</p>`;
+                        if (data.taken) {
+                            document.getElementById("msg").innerHTML =
+                                `<p style="color: red;">Opps!! Phone already exists, try someting else</p>`;
+                        } else {
+                            document.getElementById("msg").innerHTML =
+                                `<p style="color: red;">Sorry, OTP limit exceeded!! Contact Support</p>`;
+                        }
+
                     }
                 }
             });
         } else {
 
-            document.getElementById("msg").innerHTML = `<p style="color: red;"> Enter Correct Phone Number</p>`;
+            document.getElementById("msg").innerHTML =
+                `<p style="color: red;">Please enter correct Phone Number</p>`;
         }
     });
 
 
 
     $('#id_otp').change(function () {
+        $('#pass').hide();
         console.log($(this).val());
         var form = $(this).closest("form");
         console.log(form);
@@ -79,14 +116,53 @@
             success: function (data) {
                 console.log(data)
                 if (data.match) {
+                    $('#pass').show();
                     document.getElementById("msg2").innerHTML =
                         `<p style="color: green;">OTP Match</p>`;
                 } else {
+                    $('#pass').hide();
                     document.getElementById("msg2").innerHTML =
                         `<p style="color: red;">OTP Incorrect</p>`;
                 }
             }
         });
     });
+
+
+    $('#id_password').change(function () {
+        console.log($(this).val());
+
+
+
+        var pass = $(this).val();
+        var phone = $('#id_phone').val();
+        console.log(pass);
+        console.log(phone);
+
+
+
+        $.ajax({
+            url: '/account/ajax/create',
+            data: {
+                'phone': phone,
+                'pass': pass
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                if (data.create) {
+                    document.getElementById("msg2").innerHTML =
+                        `<p style="color: green;">Successfull</p>`;
+                    window.location.href = "http://127.0.0.1:8000/posts/";
+                } else {
+                    document.getElementById("msg2").innerHTML =
+                        `<p style="color: red;">Some Problem! Try again</p>`;
+                }
+            }
+        });
+    });
 </script>
 {% endblock %}
+
+
+{% endblock content %}
