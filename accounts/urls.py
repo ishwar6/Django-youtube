@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from .views import (
-    send_otp_this, otp_match, register, create
+    send_otp_this, otp_match, register, create, logout_view
 )
 
 app_name = 'accounts'
@@ -10,6 +10,9 @@ urlpatterns = [
     url(r'^ajax/new/$', send_otp_this, name='new'),
 
     url(r'^ajax/match/$', otp_match, name='match'),
+
+
+    url(r'^logout/$', logout_view, name='logout'),
     url(r'^ajax/create/$', create, name='create'),
     # url(r'^ajax/validate_otp/reset/$',
     #     validate_otp_reset, name='validate-otp-reset'),
