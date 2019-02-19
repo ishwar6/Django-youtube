@@ -5,7 +5,7 @@ import random
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 import requests
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model, login, logout
 User = get_user_model()
 
 
@@ -88,3 +88,8 @@ def create(request):
         return JsonResponse({'create': True})
     else:
         return JsonResponse({'create': False})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('post-show')
