@@ -153,8 +153,9 @@
             success: function (data) {
                 console.log(data)
                 if (data.create) {
+                    document.getElementById("msg2").innerHTML =
+                        `<p style="color: green;">Successfull</p>`;
                     window.location.href = "http://127.0.0.1:8000/posts/";
-
                 } else {
                     document.getElementById("msg2").innerHTML =
                         `<p style="color: red;">Some Problem! Try again</p>`;
