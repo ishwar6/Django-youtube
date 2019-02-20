@@ -9,5 +9,5 @@ urlpatterns = [
 
     path('list', PostListAll.as_view(), name='list'),
 
-    path('f-list', post_list, name='f-list'),
+    path('function-list', post_list, name='f-list'),
 ]
