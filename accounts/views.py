@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import PhoneOTP
-from .forms import OTPForm
+from .forms import OTPForm, LoginForm
 import random
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 import requests
-from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth import get_user_model, login, logout, authenticate, login
 User = get_user_model()
 
 
@@ -93,3 +93,21 @@ def create(request):
 def logout_view(request):
     logout(request)
     return redirect('post-show')
+
+
+def login_view(request):
+    form = LoginForm()
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username', None)
+            password = form.cleaned_data.get('password', None)
+            if username and password:
+                user_obj = authenticate(
+                    request, username=username, password=password)
+                if user_obj is not None:
+                    login(request, user_obj)
+                    return redirect('post-show')
+
+    return render(request, 'accounts/login.html', {'form': form})
