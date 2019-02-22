@@ -41,7 +41,7 @@ def get_filename_ext(filepath):
 
 
 class Post(models.Model):
-    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, null=True, blank=True)
    # author = models.OneToOneField(

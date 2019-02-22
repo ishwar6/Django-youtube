@@ -121,28 +121,33 @@ def subject_sidebar(request, id):
 
 
 def post_update_new(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    print(post)
-    form = PostCreate(instance=post)
-    print(form)
-
-    if request.method == 'POST':
+    if request.user.is_authenticated:
         post = get_object_or_404(Post, id=post_id)
-        form = PostCreate(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data.get('title')
-            blog_type = form.cleaned_data.get('blog_type')
-            text = form.cleaned_data.get('text')
-            status = form.cleaned_data.get('status')
+        print(post)
 
-            post.title = title
-            post.blog_type = blog_type
-            post.text = text
-            post.status = status
-            post.save()
-            return redirect('post-show')
+        if post.user != request.user:
+            return HttpResponse('<h1>Permission Denied</h1>')
+        form = PostCreate(instance=post)
 
-    return render(request, 'posts/update.html', {'form': form})
+        if request.method == 'POST':
+            post = get_object_or_404(Post, id=post_id)
+            form = PostCreate(request.POST)
+            if form.is_valid():
+                title = form.cleaned_data.get('title')
+                blog_type = form.cleaned_data.get('blog_type')
+                text = form.cleaned_data.get('text')
+                status = form.cleaned_data.get('status')
+
+                post.title = title
+                post.blog_type = blog_type
+                post.text = text
+                post.status = status
+                post.save()
+                return redirect('post-show')
+
+        return render(request, 'posts/update.html', {'form': form})
+    else:
+        return redirect('accounts:login')
 
 
 def login_(request):
