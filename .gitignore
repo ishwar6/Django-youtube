@@ -93,3 +93,6 @@ env/
 *.java
 *.class
 git admigrations/
+datascience_django/
+/datascience_django/
+/datascience_django
