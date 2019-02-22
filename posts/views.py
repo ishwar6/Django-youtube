@@ -84,6 +84,7 @@ def homepage(request):
 
 def post_create(request):
     if request.user.is_authenticated:
+        user = request.user
 
         if request.method == 'GET':
             form = PostCreate()
@@ -101,7 +102,7 @@ def post_create(request):
                 status = form.cleaned_data.get('status')
 
                 Post.objects.create(
-                    user=request.user,
+                    user=user,  # user who is active will be the owner of post created
                     title=title,
                     blog_type=blog_type,
                     text=text,
