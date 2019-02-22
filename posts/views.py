@@ -83,31 +83,35 @@ def homepage(request):
 
 
 def post_create(request):
+    if request.user.is_authenticated:
 
-    if request.method == 'GET':
-        form = PostCreate()
-        context = {
-            'form': form
-        }
-        return render(request, 'posts/create.html', context)
-
-    else:
-        form = PostCreate(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data.get('title')
-            blog_type = form.cleaned_data.get('blog_type')
-            text = form.cleaned_data.get('text')
-            status = form.cleaned_data.get('status')
-
-            Post.objects.create(
-                title=title,
-                blog_type=blog_type,
-                text=text,
-                status=status
-            )
-            return redirect('post-show')
-        else:
+        if request.method == 'GET':
+            form = PostCreate()
+            context = {
+                'form': form
+            }
             return render(request, 'posts/create.html', context)
+
+        else:
+            form = PostCreate(request.POST)
+            if form.is_valid():
+                title = form.cleaned_data.get('title')
+                blog_type = form.cleaned_data.get('blog_type')
+                text = form.cleaned_data.get('text')
+                status = form.cleaned_data.get('status')
+
+                Post.objects.create(
+                    user=request.user,
+                    title=title,
+                    blog_type=blog_type,
+                    text=text,
+                    status=status
+                )
+                return redirect('post-show')
+            else:
+                return render(request, 'posts/create.html', context)
+    else:
+        return redirect('accounts:login')
 
 
 def subject_sidebar(request, id):
