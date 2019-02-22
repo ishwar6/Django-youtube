@@ -14,8 +14,9 @@
 
         <div class="col-sm-10 border border-secondary mt-3">
 
-
+            {% if post.image %}
             <img src="{{post.image.url}}" alt="" width="40%" height='30%'>
+            {% endif %}
             <h1 class="mt-3  text-center">{{post.title}}<small class="text-muted"> by {{post.author}} </small></h1>
             <mark> Published on {{post.published_at}}</mark>
             <p class="lead mt-2"> {{post.text}} </p>
