@@ -1,0 +1,62 @@
+{% extends 'posts/base.html' %}
+{% block title %}Cart {{ block.super }}{% endblock %}
+{% block content %}
+{% load static%}
+<link rel="stylesheet" type="text/css" href="{% static 'cart/css/cart-home.css' %}" />
+<div class="carthome-a">
+    <div class="carthome-a-1">
+        <h1>Cart</h1>
+        {% if cart.product.exists %}
+        <h2>Review your order</h2>
+
+        <div class="cart-products">
+            <div class="cart-products-inner">
+                {% for product in cart.product.all %}
+                <div class="carthome-a-1-a">
+                    {% if product.image %}
+                    <div class="carthome-a-1-a-a">
+                        <img src="{{ product.image.url }}" alt="">
+                        {% include 'snippets/update-cart.html' with product=product cart=cart in_cart=True %}
+                    </div>
+                    {% endif %}
+                    <div class="carthome-a-1-a-b">
+                        <a href='{{ product.get_absolute_url }}'>{{ product.title }}</a>
+                        <h3>{{ product.price }}</h3>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="carthome-a-1-b">
+
+                <a href='{% url "cart:checkout" %}'>Place your order</a>
+                <h4>Order Summary</h4>
+                <div class="carthome-a-1-b-a">
+                    <p>Base price</p>
+                    <p> {{ cart.subtotal }}</p>
+                </div>
+                <div class="carthome-a-1-b-b">
+                    <p>Tax</p>
+                    <p>price</p>
+                </div>
+                <div class="carthome-a-1-b-c">
+                    <h5>Order total:</h5>
+                    <p>{{ cart.total }}</p>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+
+        <h2>Cart is empty</h2>
+        <h2>Choose from various <a href="/products/">product</a> you wanna add to your cart</h2>
+        {% endif %}
+
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
