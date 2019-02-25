@@ -73,33 +73,3 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
 
 
 m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.product.through)
-
-
-class CartNew(models.Model):
-    product = models.ManyToManyField(Product, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    total = models.DecimalField(
-        blank=True, null=True, max_digits=6, decimal_places=2)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    subtotal = models.DecimalField(
-        blank=True, null=True, max_digits=6, decimal_places=2)
-
-
-def total_saver(sender, instance, action, *args, **kwargs):
-    if action == 'post_add' or action == 'post_clear' or action == 'post_remove':
-        product = instance.product.all()
-        print(product)
-        print(instance)
-        total = Decimal(0.0)
-        for p in product:
-            total = total + p.price
-        print(total)
-
-        instance.subtotal = total
-        total = total + total * Decimal(0.1)
-        instance.total = total
-        instance.save()
-
-
-m2m_changed.connect(total_saver, sender=CartNew.product.through)

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from cart.models import Cart, CartNew
+from cart.models import Cart
 from product.models import Product
 
 
@@ -13,7 +13,7 @@ def cart_add(request):
         prod_obj = Product.objects.filter(id=prod_id).first()
         print(prod_obj)
 
-        cart_obj = CartNew.objects.filter(user=user)
+        cart_obj = Cart.objects.filter(user=user)
         if cart_obj.exists():
             cart_obj = cart_obj.first()
             if prod_obj in cart_obj.product.all():
@@ -24,7 +24,7 @@ def cart_add(request):
                 return redirect('product:list')
 
         else:
-            cart_obj = CartNew.objects.create(user=user)
+            cart_obj = Cart.objects.create(user=user)
 
         cart_obj.product.add(prod_obj)
         return redirect('product:list')
