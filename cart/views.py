@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 
 from cart.models import Cart
 from product.models import Product
+from django.http import JsonResponse
 
 
 def cart_add(request):

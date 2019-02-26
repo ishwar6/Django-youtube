@@ -23,7 +23,7 @@
                     <form class='form-product-ajax form' method='POST' action='{% url "cart:update" %}'>
                         {% csrf_token %}
 
-                        <input type='hidden' name='product_id' value='{{ object.id }}' />
+                        <input type='hidden' name='product_id' value='{{ p.id }}' />
                         {% if in_cart %}
                         <button type='submit' style="padding:0px;cursor: pointer;"> Product has been added to
                             cart.Remove? </button>
