@@ -8,14 +8,11 @@ from cart.models import Cart
 
 class ProductList(ListView):
     model = Product
-    template_name = 'product/list.html'
+    template_name = 'product/list_new.html'
     context_object_name = 'products'
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        cart_obj = Cart.objects.filter(user=self.request.user)
-        if cart_obj.exists():
-            cart_obj = cart_obj.last()
-            product_added = cart_obj.product.all()
-            context['product_added'] = product_added
+        context = super(ProductList, self).get_context_data(*args, **kwargs)
+        cart_obj, new_obj = Cart.objects.new_or_get(self.request)
+        context['cart'] = cart_obj
         return context

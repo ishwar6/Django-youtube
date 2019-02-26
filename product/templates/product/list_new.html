@@ -1,0 +1,96 @@
+{% extends "posts/base.html" %}
+
+
+{% block content %}
+
+
+
+<div class="container">
+    {{product_added}}
+    <div class="row">
+        <div class="card-columns">
+
+            {% for p in products %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{p.image.url}}" class="card-img-top" alt="{{p.image}}" height="250px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{p.title}}</h5>
+                    <p class="card-text"> {{p.description|truncatechars:100}} </p>
+                    <p class="card-text"> <b>Price</b> : {{p.price}} </p>
+                    {% if p.featured %}
+                    <p class="card-text"> <i> Special & Featured </i> </p>
+                    {% endif %}
+                    <form class='form-product-ajax form' method='POST' action='{% url "cart:update" %}'>
+                        {% csrf_token %}
+
+                        <input type='hidden' name='product_id' value='{{ object.id }}' />
+                        {% if in_cart %}
+                        <button type='submit' style="padding:0px;cursor: pointer;"> Product has been added to
+                            cart.Remove? </button>
+
+                        {% else %}
+                        <div class='submit-span'>
+                            {% if object in cart.courses.all %}
+                            <button type='submit' class='btn btn-link'>
+                                <span class="submit-span-a"> Product has been added to cart.Remove?</span>
+                            </button>
+                            {% else %}
+                            <button type='submit' class='btn btn-success'>Add to cart</button>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </form>
+
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var productForm = $(".form-product-ajax") // #form-product-ajax
+        productForm.submit(function (event) {
+            event.preventDefault();
+
+            var thisForm = $(this)
+            var actionEndpoint = thisForm.attr("action");
+            var httpMethod = thisForm.attr("method");
+            var formData = thisForm.serialize();
+            $.ajax({
+                url: actionEndpoint,
+                method: httpMethod,
+                data: formData,
+                success: function (data) {
+                    var submitSpan = thisForm.find(".submit-span")
+                    if (data.added) {
+                        submitSpan.html(
+                            "<button type='submit' class='btn btn-link'>Product has been added to your cart.Remove?</button>"
+                        )
+                    } else {
+                        submitSpan.html(
+                            "<button type='submit'  class='btn btn-success'>Add to cart</button>"
+                        )
+                    }
+                    var navbarCount = $(".cart-count")
+                    navbarCount.text(data.cartItemCount)
+                },
+                error: function (errorData) {
+                    console.log("error")
+                    console.log(errorData)
+                }
+            })
+        })
+    })
+</script>
+
+
+{% endblock %}
