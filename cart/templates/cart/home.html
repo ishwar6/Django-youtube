@@ -6,6 +6,7 @@
 <div class="carthome-a">
     <div class="carthome-a-1">
         <h1>Cart</h1>
+
         {% if cart.product.exists %}
         <h2>Review your order</h2>
 
@@ -29,7 +30,7 @@
             </div>
             <div class="carthome-a-1-b">
 
-                <a href='{% url "cart:checkout" %}'>Place your order</a>
+                <a href='#'>Place your order</a>
                 <h4>Order Summary</h4>
                 <div class="carthome-a-1-b-a">
                     <p>Base price</p>
