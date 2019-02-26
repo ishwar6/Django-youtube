@@ -25,6 +25,7 @@ def cart_add(request):
 
         else:
             cart_obj = Cart.objects.create(user=user)
+            request.session['cart_id'] = cart_obj.id
 
         cart_obj.product.add(prod_obj)
         return redirect('product:list')
@@ -32,6 +33,7 @@ def cart_add(request):
 
 def cart_home(request):
     cart_obj, new_obj = Cart.objects.new_or_get(request)
+    print(cart_obj)
     return render(request, "cart/home.html", {"cart": cart_obj})
 
 
