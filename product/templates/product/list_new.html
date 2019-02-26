@@ -23,14 +23,11 @@
                     <form class='form-product-ajax form' method='POST' action='{% url "cart:update" %}'>
                         {% csrf_token %}
 
-                        <input type='hidden' name='product_id' value='{{ p.id }}' />
-                        {% if in_cart %}
-                        <button type='submit' style="padding:0px;cursor: pointer;"> Product has been added to
-                            cart.Remove? </button>
 
-                        {% else %}
+                        <input type='hidden' name='product_id' value='{{ p.id }}' />
+
                         <div class='submit-span'>
-                            {% if object in cart.courses.all %}
+                            {% if p in cart.product.all %}
                             <button type='submit' class='btn btn-link'>
                                 <span class="submit-span-a"> Product has been added to cart.Remove?</span>
                             </button>
@@ -38,7 +35,7 @@
                             <button type='submit' class='btn btn-success'>Add to cart</button>
                             {% endif %}
                         </div>
-                        {% endif %}
+
                     </form>
 
 

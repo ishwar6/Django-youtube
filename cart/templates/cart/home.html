@@ -1,5 +1,5 @@
 {% extends 'posts/base.html' %}
-{% block title %}Cart {{ block.super }}{% endblock %}
+<title>My Cart</title>
 {% block content %}
 {% load static%}
 <link rel="stylesheet" type="text/css" href="{% static 'cart/css/cart-home.css' %}" />
@@ -31,15 +31,9 @@
             <div class="carthome-a-1-b">
 
                 <a href='#'>Place your order</a>
-                <h4>Order Summary</h4>
-                <div class="carthome-a-1-b-a">
-                    <p>Base price</p>
-                    <p> {{ cart.subtotal }}</p>
-                </div>
-                <div class="carthome-a-1-b-b">
-                    <p>Tax</p>
-                    <p>price</p>
-                </div>
+
+
+
                 <div class="carthome-a-1-b-c">
                     <h5>Order total:</h5>
                     <p>{{ cart.total }}</p>

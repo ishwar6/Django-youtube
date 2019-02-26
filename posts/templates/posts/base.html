@@ -2,6 +2,8 @@
     crossorigin="anonymous" />
 
 
+<!-- Fontawesome CSS -->
+<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' />
 <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,6 +24,12 @@
 
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{% url 'product:list' %}">Products</a>
+
+
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'post-create' %}">Create Post</a>
 
             </li>
@@ -32,13 +40,21 @@
 
                 <a class="nav-link" href="{% url 'accounts:register' %}"> Welcome, {{user}}</a>
 
+            <li class="nav-item">
+
+                <a class="nav-link" href="{% url 'cart:home' %}"> {{ request.session.cart_items }} <i class="fa fa-shopping-cart"
+                        aria-hidden="true"></i></a>
+
+
+            </li>
 
 
 
-                {% else %}
 
-                <a class="nav-link" href="{% url 'accounts:register' %}">Sign In</a>
-                {% endif %}
+            {% else %}
+
+            <a class="nav-link" href="{% url 'accounts:register' %}">Sign In</a>
+            {% endif %}
 
 
             </li>
