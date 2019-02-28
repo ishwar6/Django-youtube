@@ -16,3 +16,9 @@ class ProductList(ListView):
         cart_obj, new_obj = Cart.objects.new_or_get(self.request)
         context['cart'] = cart_obj
         return context
+
+
+class ProductDetail(DetailView):
+    model = Product
+    template_name = 'product/detail.html'
+    context_object_name = 'products'
