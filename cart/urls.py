@@ -8,7 +8,7 @@ app_name = 'cart'
 urlpatterns = [
     path('', cart_home, name='home'),
     path('add', cart_add, name='cart-add'),
-    path('update', cart_update, name='update'),
+
 
 
 
