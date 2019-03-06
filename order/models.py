@@ -1,5 +1,9 @@
-from django.db import models
 
+import math
+from django.db import models
+from django.db.models.signals import pre_save, post_save
+from cart.models import Cart
+from blog.utils import unique_order_id_generator
 
 ORDER_STATUS_CHOICES = (
     ('created', 'Created'),
@@ -38,3 +42,11 @@ class Order(models.Model):
         elif self.status == "shipped":
             return "Shipped"
         return "Shipping Soon"
+
+
+def pre_save_create_order_id(sender, instance, *args, **kwargs):
+    if not instance.order_id:
+        instance.order_id = unique_order_id_generator(instance)
+
+
+pre_save.connect(pre_save_create_order_id, sender=Order)
