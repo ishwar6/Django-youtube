@@ -24,6 +24,7 @@ STATUS_CHOICES = (
 
 
 def upload_image_path_posts(instance, filename):
+    print('Hey')
     new_filename = random.randint(1, 9910209312)
     name, ext = get_filename_ext(filename)
     final_filename = '{new_filename}{ext}'.format(
