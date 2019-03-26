@@ -24,13 +24,13 @@ urlpatterns = [
     path('post/update/<int:post_id>', post_update_new, name='post-update'),
     path('login', login_, name='login'),
 
-    path('blogs/', include('posts.urls', namespace='blog')),
+
     path('products/', include('product.urls', namespace='product')),
 
     path('cart/', include('cart.urls', namespace='cart')),
     path('account/', include('accounts.urls', namespace='accounts')),
 
-
+    path('blogs/', include('posts.urls', namespace='blog')),
     # class based views
 
 

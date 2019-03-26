@@ -1,5 +1,5 @@
 
-from .views import PostListAll, post_list
+from .views import PostListAll, post_list, PostDetailView
 from django.urls import path
 
 
@@ -10,4 +10,7 @@ urlpatterns = [
     path('list', PostListAll.as_view(), name='list'),
 
     path('function-list', post_list, name='f-list'),
+
+
+    path('detail/<int:pk>', PostDetailView.as_view(), name='detail'),
 ]
