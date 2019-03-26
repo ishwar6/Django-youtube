@@ -224,5 +224,3 @@ class PostUpdate(UpdateView):
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'posts/detail.html'
-    context_object_name = 'post'
