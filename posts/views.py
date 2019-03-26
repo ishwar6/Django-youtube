@@ -220,7 +220,3 @@ class PostUpdate(UpdateView):
         context = super().get_context_data(*args, **kwargs)
         print(context)
         return context
-
-
-class PostDetailView(DetailView):
-    model = Post
